@@ -1,0 +1,10 @@
+node_modules/
+.nyc_output/
+coverage/
+example/
+test/
+src/
+*.log
+*.tgz
+.*
+rollup.config.js
