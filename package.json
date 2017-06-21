@@ -2,12 +2,27 @@
   "name": "femto-flux",
   "version": "1.0.0-0",
   "description": "minimal flux",
-  "license": "UNLICENSE",
+  "keywords": [
+    "dispatcher",
+    "flux",
+    "minimal",
+    "store"
+  ],
+  "homepage": "https://github.com/commenthol/fempto-flux#readme",
+  "bugs": {
+    "url": "https://github.com/commenthol/fempto-flux/issues"
+  },
+  "license": "Unlicense",
   "author": "commenthol@gmail.com",
   "main": "index.js",
   "jsnext:main": "index.es5.js",
   "directories": {
+    "example": "example",
     "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commenthol/fempto-flux.git"
   },
   "scripts": {
     "build": "rollup -c rollup.config.js && babel -o index.js index.es5.js",
