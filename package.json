@@ -8,9 +8,9 @@
     "minimal",
     "store"
   ],
-  "homepage": "https://github.com/commenthol/fempto-flux#readme",
+  "homepage": "https://github.com/commenthol/femto-flux#readme",
   "bugs": {
-    "url": "https://github.com/commenthol/fempto-flux/issues"
+    "url": "https://github.com/commenthol/femto-flux/issues"
   },
   "license": "Unlicense",
   "author": "commenthol@gmail.com",
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/commenthol/fempto-flux.git"
+    "url": "git+https://github.com/commenthol/femto-flux.git"
   },
   "scripts": {
     "build": "rollup -c rollup.config.js && babel -o index.js index.es5.js",
