@@ -1,6 +1,6 @@
 {
   "name": "femto-flux",
-  "version": "1.0.0-0",
+  "version": "1.0.0",
   "description": "minimal flux",
   "keywords": [
     "dispatcher",
