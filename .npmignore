@@ -8,3 +8,5 @@ src/
 *.tgz
 .*
 rollup.config.js
+package-lock.json
+yarn.lock

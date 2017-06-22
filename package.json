@@ -25,7 +25,7 @@
     "url": "git+https://github.com/commenthol/femto-flux.git"
   },
   "scripts": {
-    "build": "rollup -c rollup.config.js && babel -o index.js index.es5.js",
+    "build": "rollup -c rollup.config.js && babel -o index.js index.es5.js && uglifyjs -cm -o index.es5.min.js index.es5.js",
     "cover": "nyc -r lcov npm test",
     "test": "mocha"
   },
@@ -43,6 +43,7 @@
     "babel-register": "^6.24.1",
     "mocha": "^3.4.2",
     "rollup": "^0.43.0",
-    "rollup-plugin-node-resolve": "^3.0.0"
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "uglify-es": "^3.0.19"
   }
 }

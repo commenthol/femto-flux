@@ -3,15 +3,21 @@ import EventEmitter from './EventEmitter'
 const CHANGE = 'CHANGE'
 
 export default class Store extends EventEmitter {
-  constructor (dispatcher) {
+  constructor (dispatcher, opts) {
     super()
-    ;['__dispatch', '__emitChange']
+    this.opts = opts || {}
+    this.dispatcher = dispatcher
+    ;['__dispatch', '__emitChange', 'getDispatcher']
     .forEach((fn) => { this[fn] = this[fn].bind(this) })
     dispatcher.addEventListener(dispatcher.token, (payload) => {
       dispatcher.lock = true
       this.__dispatch(payload)
       dispatcher.lock = false
     })
+  }
+
+  getDispatcher () {
+    return this.dispatcher
   }
 
   addListener (callback) {
@@ -22,7 +28,7 @@ export default class Store extends EventEmitter {
   }
 
   __emitChange () {
-    setImmediate(() => this.emit(CHANGE))
+    this.emit(CHANGE)
   }
 
   __dispatch (payload) {

@@ -41,15 +41,21 @@ class Dispatcher extends EventEmitter {
 const CHANGE = 'CHANGE';
 
 class Store extends EventEmitter {
-  constructor (dispatcher) {
-    super()
-    ;['__dispatch', '__emitChange']
+  constructor (dispatcher, opts) {
+    super();
+    this.opts = opts || {};
+    this.dispatcher = dispatcher
+    ;['__dispatch', '__emitChange', 'getDispatcher']
     .forEach((fn) => { this[fn] = this[fn].bind(this); });
     dispatcher.addEventListener(dispatcher.token, (payload) => {
       dispatcher.lock = true;
       this.__dispatch(payload);
       dispatcher.lock = false;
     });
+  }
+
+  getDispatcher () {
+    return this.dispatcher
   }
 
   addListener (callback) {
@@ -60,7 +66,7 @@ class Store extends EventEmitter {
   }
 
   __emitChange () {
-    setImmediate(() => this.emit(CHANGE));
+    this.emit(CHANGE);
   }
 
   __dispatch (payload) {
@@ -68,4 +74,19 @@ class Store extends EventEmitter {
   }
 }
 
-export { Dispatcher, Store, EventEmitter };
+class Actions {
+  constructor (dispatch, opts) {
+    this.opts = opts || {};
+    const name = this.opts.name || this.constructor.name;
+    const desc = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this));
+
+    this.actionTypes = {};
+    this.dispatch = dispatch;
+
+    Object.keys(desc)
+    .filter((key) => desc[key].value && 'constructor' !== key)
+    .forEach((key) => this.actionTypes[key] = `${name}_${key}`);
+  }
+}
+
+export { Dispatcher, Store, Actions, EventEmitter };

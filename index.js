@@ -79,12 +79,13 @@ var CHANGE = 'CHANGE';
 var Store = function (_EventEmitter2) {
   _inherits(Store, _EventEmitter2);
 
-  function Store(dispatcher) {
+  function Store(dispatcher, opts) {
     _classCallCheck(this, Store);
 
     var _this3 = _possibleConstructorReturn(this, (Store.__proto__ || Object.getPrototypeOf(Store)).call(this));
 
-    ['__dispatch', '__emitChange'].forEach(function (fn) {
+    _this3.opts = opts || {};
+    _this3.dispatcher = dispatcher;['__dispatch', '__emitChange', 'getDispatcher'].forEach(function (fn) {
       _this3[fn] = _this3[fn].bind(_this3);
     });
     dispatcher.addEventListener(dispatcher.token, function (payload) {
@@ -96,6 +97,11 @@ var Store = function (_EventEmitter2) {
   }
 
   _createClass(Store, [{
+    key: 'getDispatcher',
+    value: function getDispatcher() {
+      return this.dispatcher;
+    }
+  }, {
     key: 'addListener',
     value: function addListener(callback) {
       var _this4 = this;
@@ -110,11 +116,7 @@ var Store = function (_EventEmitter2) {
   }, {
     key: '__emitChange',
     value: function __emitChange() {
-      var _this5 = this;
-
-      setImmediate(function () {
-        return _this5.emit(CHANGE);
-      });
+      this.emit(CHANGE);
     }
   }, {
     key: '__dispatch',
@@ -126,6 +128,26 @@ var Store = function (_EventEmitter2) {
   return Store;
 }(EventEmitter);
 
+var Actions = function Actions(dispatch, opts) {
+  var _this5 = this;
+
+  _classCallCheck(this, Actions);
+
+  this.opts = opts || {};
+  var name = this.opts.name || this.constructor.name;
+  var desc = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this));
+
+  this.actionTypes = {};
+  this.dispatch = dispatch;
+
+  Object.keys(desc).filter(function (key) {
+    return desc[key].value && 'constructor' !== key;
+  }).forEach(function (key) {
+    return _this5.actionTypes[key] = name + '_' + key;
+  });
+};
+
 exports.Dispatcher = Dispatcher;
 exports.Store = Store;
+exports.Actions = Actions;
 exports.EventEmitter = EventEmitter;

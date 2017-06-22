@@ -1,8 +1,7 @@
 /* global describe, it */
 
 import assert from 'assert'
-import EventEmitter from '../src/EventEmitter'
-import Dispatcher from '../src/Dispatcher'
+import {EventEmitter, Dispatcher} from '../src'
 
 describe('#Dispatcher', function () {
   it('should create a new Dispatcher', function () {
