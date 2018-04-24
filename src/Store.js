@@ -1,37 +1,48 @@
 import EventEmitter from './EventEmitter'
 
-const CHANGE = 'CHANGE'
+const CHANGE = 'change'
 
 export default class Store extends EventEmitter {
   constructor (dispatcher, opts) {
     super()
-    this.opts = opts || {}
-    this.dispatcher = dispatcher
-    ;['__dispatch', '__emitChange', 'getDispatcher']
-    .forEach((fn) => { this[fn] = this[fn].bind(this) })
-    dispatcher.addEventListener(dispatcher.token, (payload) => {
-      dispatcher.lock = true
-      this.__dispatch(payload)
-      dispatcher.lock = false
+    Object.assign(this, {
+      dispatcher,
+      opts,
+      CHANGE
     })
+    dispatcher.register((payload) => {
+      this._changed = false
+      this._invoke(payload)
+    })
+  }
+
+  addListener (callback) {
+    this.addEventListener(this.CHANGE, callback)
+    return {
+      remove: () => this.removeEventListener(this.CHANGE, callback)
+    }
   }
 
   getDispatcher () {
     return this.dispatcher
   }
 
-  addListener (callback) {
-    this.addEventListener(CHANGE, callback)
-    return {
-      remove: () => this.removeEventListener(CHANGE, callback)
+  hasChanged () {
+    return this._changed
+  }
+
+  _invoke (payload) {
+    this.__onDispatch(payload)
+    if (this._changed) {
+      this.emit(this.CHANGE)
     }
   }
 
   __emitChange () {
-    this.emit(CHANGE)
+    this._changed = true
   }
 
-  __dispatch (payload) {
-    throw new Error('needs implementation')
-  }
+  // __onDispatch (payload) {
+  //   throw new Error('implement __onDispatch()')
+  // }
 }

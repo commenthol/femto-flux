@@ -1,4 +1,4 @@
-const {Dispatcher, Store, Actions} = require('..')
+const {Dispatcher, ReduceStore, Actions} = require('..')
 
 // define actions
 class SampleActions extends Actions {
@@ -13,22 +13,16 @@ class SampleActions extends Actions {
 }
 
 // define a store
-class SampleStore extends Store {
-  constructor (dispatcher, opts) {
-    super(dispatcher, opts)
-    this.state = {}
-  }
-  getState () {
-    return Object.assign({}, this.state)
-  }
-  __onDispatch (action) {
+class SampleStore extends ReduceStore {
+  reduce (state, action) {
     const {actions} = this.opts
+    let nextState = state
     switch (action.type) {
       case actions.click.type:
-        Object.assign(this.state, action.data)
-        this.__emitChange()
+        nextState = action.data
         break
     }
+    return nextState
   }
 }
 

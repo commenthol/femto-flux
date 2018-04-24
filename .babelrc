@@ -1,0 +1,39 @@
+{
+  "ignore": [
+    "./dist/index.js",
+    "./dist/index.min.js"
+  ],
+  "env": {
+    "development": {
+      "presets": [
+        "env",
+        "stage-2"
+      ]
+    },
+    "es5": {
+      "presets": [
+        [
+          "env",
+          {
+            "modules": false
+          }
+        ],
+        "stage-2"
+      ]
+    },
+    "es6": {
+      "presets": [
+        [
+          "env",
+          {
+            "modules": false,
+            "targets": {
+              "node": "6.0.0"
+            }
+          }
+        ],
+        "stage-2"
+      ]
+    }
+  }
+}

@@ -1,11 +1,11 @@
 node_modules/
-.nyc_output/
 coverage/
 test/
-src/
+docs/
+tmp/
 *.log
 *.tgz
 .*
 rollup.config.js
-package-lock.json
-yarn.lock
+example
+

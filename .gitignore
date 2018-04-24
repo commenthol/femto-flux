@@ -1,7 +1,9 @@
 node_modules/
-.nyc_output/
 coverage/
+docs/
+dist/
+lib/
+tmp/
 *.log
 *.tgz
-package-lock.json
-yarn.lock
+.nyc_output

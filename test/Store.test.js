@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import assert from 'assert'
-import {EventEmitter, Dispatcher, Store} from '../src'
+import {EventEmitter, Dispatcher, Store} from '..'
 
 const payload = {type: 'test', payload: true}
 
@@ -13,12 +13,18 @@ describe('#Store', function () {
     assert.ok(dispatcher instanceof EventEmitter)
   })
 
-  it('should throw on unimplemented __dispatch', function () {
+  it('should return dispatcher', function () {
     const dispatcher = new Dispatcher()
     const store = new Store(dispatcher)
+    assert.ok(store.getDispatcher() === dispatcher)
+  })
+
+  it('should throw on unimplemented __onDispatch', function () {
+    const dispatcher = new Dispatcher()
+    const store = new Store(dispatcher) // eslint-disable-line
     assert.throws(() => {
       dispatcher.dispatch()
-    }, /needs implementation/ )
+    }, /TypeError: this.__onDispatch is not a function/)
   })
 
   it('should update TestStore on dispatch', function (done) {
@@ -32,7 +38,7 @@ describe('#Store', function () {
         return this.store
       }
 
-      __dispatch (payload) {
+      __onDispatch (payload) {
         this.store = payload
         this.__emitChange()
       }
@@ -60,17 +66,46 @@ describe('#Store', function () {
         return this.store
       }
 
-      __dispatch (payload) {
+      __onDispatch (payload) {
         this.store = payload
         dispatcher.dispatch(payload)
         this.__emitChange()
       }
     }
 
-    const store = new TestStore(dispatcher)
+    const store = new TestStore(dispatcher) // eslint-disable-line
     assert.throws(() => {
       dispatcher.dispatch(payload)
-    }, /can`t dispatch in the middle of a dispatch/)
+    }, /can't dispatch in the middle of a dispatch/)
+  })
+
+  it('should return correct values for hasChanged', function (done) {
+    const dispatcher = new Dispatcher()
+
+    class TestStore extends Store {
+      __onDispatch (payload) {
+        switch (payload) {
+          case 'EMIT':
+            this.__emitChange()
+            break
+          case 'DONE':
+            assert.strictEqual(store.hasChanged(), false)
+            done()
+            break
+          default:
+            setTimeout(() => dispatcher.dispatch('DONE'))
+            break
+        }
+      }
+    }
+
+    const store = new TestStore(dispatcher)
+    store.addListener(() => {
+      assert.strictEqual(store.hasChanged(), true)
+      setTimeout(() => dispatcher.dispatch('NOEMIT'))
+    })
+
+    dispatcher.dispatch('EMIT')
   })
 
   it('should call component on store changes', function (done) {
@@ -86,7 +121,7 @@ describe('#Store', function () {
         return this.store
       }
 
-      __dispatch (payload) {
+      __onDispatch (payload) {
         this.store = payload
         this.__emitChange()
       }
@@ -97,7 +132,6 @@ describe('#Store', function () {
       constructor (props) {
         this.props = props
         this.onChange = this.onChange.bind(this)
-
         this.componentDidMount()
       }
 
@@ -114,7 +148,7 @@ describe('#Store', function () {
 
         // testing...
         const {store} = this.props
-        assert.deepEqual(store.listeners.CHANGE, [])
+        assert.deepEqual(store.listeners.change, [])
         done()
       }
 
@@ -127,7 +161,7 @@ describe('#Store', function () {
     }
 
     const store = new TestStore(dispatcher)
-    const comp = new Component({store})
+    const comp = new Component({store}) // eslint-disable-line
 
     // trigger an action...
     dispatcher.dispatch(payload)

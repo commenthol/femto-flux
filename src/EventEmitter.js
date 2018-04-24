@@ -20,6 +20,5 @@ export default class EventEmitter {
     ;(this.listeners[type] || []).forEach((callback) => {
       callback.call(this, payload)
     })
-    return
   }
 }
