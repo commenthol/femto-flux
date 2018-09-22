@@ -1,6 +1,6 @@
 {
   "name": "femto-flux",
-  "version": "2.0.0",
+  "version": "2.1.0-0",
   "description": "minimal flux",
   "keywords": [
     "dispatcher",
@@ -12,24 +12,25 @@
   "bugs": {
     "url": "https://github.com/commenthol/femto-flux/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commenthol/femto-flux.git"
+  },
   "license": "Unlicense",
   "author": "commenthol@gmail.com",
-  "main_": "src",
   "main": "dist/index.js",
   "module": "dist/index.es5.js",
   "directories": {
     "example": "example",
     "test": "test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/commenthol/femto-flux.git"
-  },
   "scripts": {
-    "all": "npm run clean && npm run lint && npm run build && npm test",
+    "all": "npm-run-all clean lint build test",
     "build": "rollup -c",
+    "build:example": "cd example && webpack",
     "clean": "rimraf dist coverage .nyc_output",
-    "clean:all": "npm run clean && rimraf node_modules",
+    "clean:all": "npm-run-all clean clean:node_modules",
+    "clean:modules": "rimraf node_modules",
     "coverage": "nyc -r text -r html npm test",
     "doc": "jsdoc -c scripts/jsdoc/jsdoc.json",
     "lint": "eslint '**/*.js'",
@@ -39,30 +40,46 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-stage-2": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "core-js": "^2.5.5",
-    "eslint": "^5.1.0",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "jsdoc": "^3.5.5",
-    "mocha": "^5.1.0",
-    "nyc": "^12.0.2",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.62.0",
-    "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-uglify": "^3.0.0"
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/plugin-external-helpers": "^7.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.6.2",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "core-js": "^3.2.1",
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.15.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jsdoc": "^3.6.3",
+    "jsdom": "^15.1.1",
+    "mocha": "^6.2.1",
+    "npm-run-all": "^4.1.5",
+    "nyc": "^14.1.1",
+    "preact": "^10.0.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.10.1",
+    "react-dom": "^16.10.1",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.22.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
   },
   "peerDependencies": {},
   "engines": {
     "node": ">=4.0.0"
   },
+  "main_": "src",
   "maintainers": [
     "commenthol <commenthol@gmail.com>"
   ]

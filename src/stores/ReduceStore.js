@@ -3,15 +3,9 @@ import Store from './Store'
 export default class ReduceStore extends Store {
   constructor (dispatcher, opts) {
     super(dispatcher, opts)
-    this._state = this.getInitialState()
-  }
-
-  getInitialState () {
-    return {}
-  }
-
-  getState () {
-    return this._state
+    this.state = {
+      ...(this.state || {}) // from super()
+    }
   }
 
   // reduce (state, payload) {
@@ -23,10 +17,10 @@ export default class ReduceStore extends Store {
   }
 
   _invoke (payload) {
-    const nextState = this.reduce(this._state, payload)
+    const nextState = this.reduce(this.state, payload)
     if (!nextState) throw new Error('reduce() must not return undefined')
-    if (!this.areEqual(this._state, nextState)) {
-      this._state = nextState
+    if (!this.areEqual(this.state, nextState)) {
+      this.state = nextState
       this.__emitChange()
       this.emit(this.CHANGE)
     }

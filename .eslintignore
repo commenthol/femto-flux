@@ -1,4 +1,5 @@
 coverage/
+example/*.bundle.js
 docs/
 dist/
 lib/

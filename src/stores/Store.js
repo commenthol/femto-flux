@@ -1,4 +1,4 @@
-import EventEmitter from './EventEmitter'
+import EventEmitter from '../EventEmitter'
 
 const CHANGE = 'change'
 
@@ -8,7 +8,10 @@ export default class Store extends EventEmitter {
     Object.assign(this, {
       dispatcher,
       opts,
-      CHANGE
+      CHANGE,
+      state: {
+        ...(this.state || {}) // from super()
+      }
     })
     dispatcher.register((payload) => {
       this._changed = false
@@ -16,10 +19,14 @@ export default class Store extends EventEmitter {
     })
   }
 
-  addListener (callback) {
-    this.addEventListener(this.CHANGE, callback)
+  getState () {
+    return this.state
+  }
+
+  addListener (listener) {
+    this.addEventListener(this.CHANGE, listener)
     return {
-      remove: () => this.removeEventListener(this.CHANGE, callback)
+      remove: () => this.removeEventListener(this.CHANGE, listener)
     }
   }
 

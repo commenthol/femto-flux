@@ -1,30 +1,41 @@
-/* global describe, it */
-
 import assert from 'assert'
-import {EventEmitter, Dispatcher, ReduceStore} from '..'
+import { EventEmitter, Dispatcher, ReduceStore } from '..'
 
-const payload = {type: 'test', payload: true}
+const payload = { type: 'test', payload: true }
 
 describe('#ReduceStore', function () {
+  let dispatcher
+  beforeEach(function () {
+    dispatcher = new Dispatcher()
+  })
+
   it('should create a new ReduceStore', function () {
-    const dispatcher = new Dispatcher()
     const store = new ReduceStore(dispatcher)
     assert.ok(store instanceof ReduceStore)
     assert.ok(dispatcher instanceof EventEmitter)
   })
 
   it('should return dispatcher', function () {
-    const dispatcher = new Dispatcher()
     const store = new ReduceStore(dispatcher)
     assert.ok(store.getDispatcher() === dispatcher)
   })
 
   it('should throw on unimplemented reduce()', function () {
-    const dispatcher = new Dispatcher()
     const store = new ReduceStore(dispatcher) // eslint-disable-line
     assert.throws(() => {
       dispatcher.dispatch()
     }, /TypeError: this.reduce is not a function/)
+  })
+
+  it('reduce should not return undefined', function () {
+    class TestStore extends ReduceStore {
+      reduce (/* state, payload */) {}
+    }
+    const store = new TestStore(dispatcher)
+    assert.ok(store)
+    assert.throws(() => {
+      dispatcher.dispatch(payload)
+    }, /reduce\(\) must not return undefined/)
   })
 
   it('should update TestStore on dispatch', function (done) {
@@ -34,19 +45,16 @@ describe('#ReduceStore', function () {
       }
     }
 
-    const dispatcher = new Dispatcher()
     const store = new TestStore(dispatcher)
     dispatcher.dispatch(payload)
     setTimeout(() => {
-      assert.deepEqual(store.getState(), payload)
+      assert.deepStrictEqual(store.getState(), payload)
       assert.strictEqual(store.hasChanged(), true)
       done()
     }, 10)
   })
 
   it('should throw on dispatch in a middle of a dispatch', function () {
-    const dispatcher = new Dispatcher()
-
     class TestStore extends ReduceStore {
       reduce (state, payload) {
         dispatcher.dispatch(payload)
@@ -61,14 +69,12 @@ describe('#ReduceStore', function () {
   })
 
   it('should return correct values for hasChanged', function (done) {
-    const dispatcher = new Dispatcher()
-
     class TestStore extends ReduceStore {
       reduce (state, payload) {
         let nextState = state
         switch (payload) {
           case 'EMIT':
-            nextState = {payload}
+            nextState = { payload }
             break
           case 'DONE':
             assert.strictEqual(store.hasChanged(), false)
@@ -92,8 +98,6 @@ describe('#ReduceStore', function () {
   })
 
   it('should call component on store changes', function (done) {
-    const dispatcher = new Dispatcher()
-
     class TestStore extends ReduceStore {
       reduce (state, payload) {
         return payload
@@ -119,13 +123,13 @@ describe('#ReduceStore', function () {
         // disconnect from store(s)
         this.removers.forEach((store) => { store.remove() })
         // testing...
-        const {store} = this.props
-        assert.deepEqual(store.listeners.change, [])
+        const { store } = this.props
+        assert.deepStrictEqual(store.listeners.change, [])
         done()
       }
 
       onChange () {
-        assert.deepEqual(this.props.store.getState(), payload)
+        assert.deepStrictEqual(this.props.store.getState(), payload)
         // this would be the point to call `this.setState(...)`
         this.componentWillUnmount()
       }

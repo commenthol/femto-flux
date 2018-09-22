@@ -1,9 +1,7 @@
-/* global describe, it */
-
 import assert from 'assert'
-import {EventEmitter, Dispatcher, Store} from '..'
+import { EventEmitter, Dispatcher, Store } from '..'
 
-const payload = {type: 'test', payload: true}
+const payload = { type: 'test', payload: true }
 
 describe('#Store', function () {
   it('should create a new Store', function () {
@@ -48,7 +46,7 @@ describe('#Store', function () {
     const store = new TestStore(dispatcher)
     dispatcher.dispatch(payload)
     setTimeout(() => {
-      assert.deepEqual(store.get(), payload)
+      assert.deepStrictEqual(store.get(), payload)
       done()
     }, 10)
   })
@@ -147,13 +145,13 @@ describe('#Store', function () {
         this.removers.forEach((store) => { store.remove() })
 
         // testing...
-        const {store} = this.props
-        assert.deepEqual(store.listeners.change, [])
+        const { store } = this.props
+        assert.deepStrictEqual(store.listeners.change, [])
         done()
       }
 
       onChange () {
-        assert.deepEqual(this.props.store.get(), payload)
+        assert.deepStrictEqual(this.props.store.get(), payload)
         // this would be the point to call `this.setState(...)`
 
         this.componentWillUnmount()

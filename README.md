@@ -4,10 +4,11 @@
 
 [![NPM version](https://badge.fury.io/js/femto-flux.svg)](https://www.npmjs.com/package/femto-flux/)
 
+See example at https://commenthol.github.io/femto-flux
 
 This implements a minimal flux pattern with a [flux/utils compatible Store/ReduceStore](http://facebook.github.io/flux/docs/flux-utils.html).
 Package has no external dependencies.
-Around 2kB for minified ES6 code.
+Around 4kB for minified ES6 code.
 
 ## Installation
 
@@ -96,6 +97,47 @@ Run the above example with:
 To use `Store` instead of `ReduceStore` run:
 
     node example/flow.js
+
+
+## Container
+
+To connect a Component to various stores you may use the `connect` method
+
+```js
+import {Dispatcher, ReduceStore} from `femto-flux`
+import {connect} from `femto-flux`
+
+class HelloStore extends ReduceStore {
+  reduce () { return 'hello' }
+}
+class WorldStore extends ReduceStore {
+  reduce () { return 'world' }
+}
+const dispatcher = new Dispatcher()
+const stores = [
+  new HelloStore(dispatcher),
+  new WorldStore(dispatcher)
+]
+
+class Base extends Component {
+  static getStores(props, context) {
+    return stores
+  }
+  static calculateState (state, props, context) {
+    return {value: stores.map(store => store.getState().value).join(' ')}
+  }
+  render () {
+    return (<div>{this.state}</div>)
+  }
+}
+const Container = connect(Base)
+
+...
+
+dispatcher.dispatch()
+```
+
+See [./example/container.js](./example/container.js)
 
 ## License
 

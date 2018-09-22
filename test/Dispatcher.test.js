@@ -1,7 +1,5 @@
-/* global describe, it */
-
 import assert from 'assert'
-import {EventEmitter, Dispatcher} from '..'
+import { EventEmitter, Dispatcher } from '..'
 
 describe('#Dispatcher', function () {
   it('should create a new Dispatcher', function () {
@@ -22,17 +20,17 @@ describe('#Dispatcher', function () {
   })
 
   it('should dispatch', function (done) {
-    const payload = {type: 'test', payload: true}
+    const payload = { type: 'test', payload: true }
     const dispatcher = new Dispatcher()
     dispatcher.addEventListener(dispatcher.token, (_payload) => {
-      assert.deepEqual(_payload, payload)
+      assert.deepStrictEqual(_payload, payload)
       done()
     })
     dispatcher.dispatch(payload)
   })
 
   it('should register and unregister', function (done) {
-    const payload = {type: 'test', payload: true}
+    const payload = { type: 'test', payload: true }
     const dispatcher = new Dispatcher()
 
     function getListeners () {
@@ -41,17 +39,17 @@ describe('#Dispatcher', function () {
 
     function unregister () {
       dispatcher.unregister(onDispatch)
-      assert.equal(getListeners(), 0)
+      assert.strictEqual(getListeners(), 0)
       done()
     }
 
     function onDispatch (_payload) {
-      assert.deepEqual(_payload, payload)
+      assert.deepStrictEqual(_payload, payload)
       unregister()
     }
 
     dispatcher.register(onDispatch)
-    assert.equal(getListeners(), 1)
+    assert.strictEqual(getListeners(), 1)
     dispatcher.dispatch(payload)
   })
 })

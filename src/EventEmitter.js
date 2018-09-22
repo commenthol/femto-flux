@@ -3,22 +3,22 @@ export default class EventEmitter {
     this.listeners = {}
   }
 
-  addEventListener (type, callback) {
+  addEventListener (type, listener) {
     if (!(type in this.listeners)) {
       this.listeners[type] = []
     }
-    this.listeners[type].push(callback)
+    this.listeners[type].push(listener)
   }
 
-  removeEventListener (type, callback) {
+  removeEventListener (type, listener) {
     const stack = this.listeners[type] || []
-    const i = stack.indexOf(callback)
+    const i = stack.indexOf(listener)
     if (i !== -1) stack.splice(i, 1)
   }
 
   emit (type, payload) {
-    ;(this.listeners[type] || []).forEach((callback) => {
-      callback.call(this, payload)
+    ;(this.listeners[type] || []).forEach((listener) => {
+      listener.call(this, payload)
     })
   }
 }

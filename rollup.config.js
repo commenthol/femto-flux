@@ -1,58 +1,56 @@
 import babel from 'rollup-plugin-babel'
-import uglify from 'rollup-plugin-uglify'
+import uglify from 'rollup-plugin-uglify-es'
 
 process.env.BABEL_ENV = 'notThere'
 
 // can't use .babelrc for the different envs - hence we define those here
 const babelEnv = {
-  'es5': {
-    'presets': [
+  es5: {
+    presets: [
       [
-        'env',
+        '@babel/env',
         {
-          'modules': false
-        }
-      ],
-      'stage-2'
-    ]
-  },
-  'es6': {
-    'presets': [
-      [
-        'env',
-        {
-          'modules': false,
-          'targets': {
-            'node': '6.0.0'
+          modules: false,
+          targets: {
+            node: '4.0.0'
           }
         }
-      ],
-      'stage-2'
+      ]
+    ]
+  },
+  es6: {
+    presets: [
+      [
+        '@babel/env',
+        {
+          modules: false,
+          targets: {
+            node: '6.0.0'
+          }
+        }
+      ]
     ]
   }
 }
 
-const input = 'src/index.js'
-
-const output = (type, min = '') => type === 'es6'
+const output = (name, type, min = '') => type === 'es6'
   ? [{
-    file: `./dist/index.${type}${min}.js`,
+    file: `./dist/${name}.${type}${min}.js`,
     format: 'es'
   }]
   : [{
-    file: `./dist/index.${type}${min}.js`,
+    file: `./dist/${name}.${type}${min}.js`,
     format: 'es'
   }, {
-    file: `./dist/index${min}.js`,
+    file: `./dist/${name}${min}.js`,
     format: 'cjs',
     exports: 'named'
   }]
 
-const builder = (type, min = '') => {
+const builder = (input, name, type, min = '') => {
   const _babelOpts = {
     exclude: 'node_modules/**',
     runtimeHelpers: true,
-    plugins: ['external-helpers'],
     presets: babelEnv[type].presets
   }
   const plugins = [
@@ -64,14 +62,17 @@ const builder = (type, min = '') => {
 
   return {
     input,
-    output: output(type, min),
-    plugins
+    output: output(name, type, min),
+    plugins,
+    external: ['react']
   }
 }
 
 export default [
-  builder('es5'),
-  builder('es5', '.min'),
-  builder('es6'),
-  builder('es6', '.min')
+  builder('src/index.js', 'index', 'es5'),
+  builder('src/index.js', 'index', 'es5', '.min'),
+  builder('src/index.js', 'index', 'es6'),
+  builder('src/index.js', 'index', 'es6', '.min')
+  // builder('src/container/Container.js', 'Container', 'es5', '', ''),
+  // builder('src/container/FnComponent.js', 'FnComponent', 'es5', '', '')
 ]

@@ -1,4 +1,4 @@
-const {Dispatcher, ReduceStore, Actions} = require('..')
+const { Dispatcher, ReduceStore, Actions } = require('..')
 
 // define actions
 class SampleActions extends Actions {
@@ -8,14 +8,14 @@ class SampleActions extends Actions {
     // therefor `type` needs to be named using the correct method name,
     // in this case `this.click.type`
     const type = this.click.type
-    this.dispatch({type, data})
+    this.dispatch({ type, data })
   }
 }
 
 // define a store
 class SampleStore extends ReduceStore {
   reduce (state, action) {
-    const {actions} = this.opts
+    const { actions } = this.opts
     let nextState = state
     switch (action.type) {
       case actions.click.type:
@@ -36,24 +36,30 @@ class Component {
       onChange: this.onChange.bind(this)
     })
   }
+
   setState (state) {
     Object.assign(this.state, state)
     this.render()
   }
+
   componentDidMount () {
     this.removers = [ // connect to store
       this.store.addListener(this.onChange)
     ]
   }
+
   componentWillUnmount () { // disconnect from store(s)
     this.removers.forEach((store) => store.remove())
   }
+
   onChange () {
     this.setState(this.store.getState())
   }
+
   onClick () {
-    this.actions.click({x: 5, y: 10})
+    this.actions.click({ x: 5, y: 10 })
   }
+
   render () {
     console.log(this.state)
     console.timeEnd('click')
@@ -63,8 +69,8 @@ class Component {
 // our instances
 const dispatcher = new Dispatcher()
 const actions = new SampleActions(dispatcher.dispatch)
-const store = new SampleStore(dispatcher, {actions})
-const c = new Component({store, actions})
+const store = new SampleStore(dispatcher, { actions })
+const c = new Component({ store, actions })
 c.componentDidMount()
 
 // dispatch an action
