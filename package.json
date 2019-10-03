@@ -33,6 +33,7 @@
     "clean:modules": "rimraf node_modules",
     "coverage": "nyc -r text -r html npm test",
     "doc": "jsdoc -c scripts/jsdoc/jsdoc.json",
+    "gh-pages": "npm run build:example && cp example/container.bundle.js . && cp example/container.html index.html",
     "lint": "eslint '**/*.js'",
     "prepublishOnly": "npm run all",
     "readme": "markedpp --githubid -i README.md -o README.md",

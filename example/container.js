@@ -57,7 +57,7 @@ class Base extends Component {
 const Container = connect(Base) // eslint-disable-line no-unused-vars
 
 const dom = document.createElement('div')
-document.body.appendChild(dom)
+document.body.insertBefore(dom, document.body.firstChild)
 
 render(
   <Container />,
