@@ -6,7 +6,7 @@
 
 See example at https://commenthol.github.io/femto-flux
 
-This implements a minimal flux pattern with a [flux/utils compatible Store/ReduceStore](http://facebook.github.io/flux/docs/flux-utils.html).
+This implements a minimal flux pattern with a [flux/utils compatible Store/ReduceStore](http://facebook.github.io/flux/docs/flux-utils).
 Package has no external dependencies.
 Around 4kB for minified ES6 code.
 
