@@ -38,7 +38,7 @@ export default function connect (Base, getStores = Base.getStores, calculateStat
     }
 
     _removeStores () {
-      this.__removers && this.__removers.forEach(token => token.remove())
+      this._removers && this._removers.forEach(token => token.remove())
     }
   }
 
