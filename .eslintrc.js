@@ -8,7 +8,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
   },
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true
@@ -20,6 +20,6 @@ module.exports = {
     'react'
   ],
   rules: {
-    'no-unused-vars': ['error', {varsIgnorePattern: '^h$'}]
+    'no-unused-vars': ['error', { varsIgnorePattern: '^h$' }]
   }
-};
+}
