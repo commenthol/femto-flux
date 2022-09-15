@@ -1,5 +1,5 @@
-import babel from 'rollup-plugin-babel'
-import uglify from 'rollup-plugin-uglify-es'
+import { babel } from '@rollup/plugin-babel'
+import { terser } from 'rollup-plugin-terser'
 
 process.env.BABEL_ENV = 'notThere'
 
@@ -35,29 +35,29 @@ const babelEnv = {
 
 const output = (name, type, min = '') => type === 'es6'
   ? [{
-    file: `./dist/${name}.${type}${min}.js`,
-    format: 'es'
-  }]
+      file: `./dist/${name}.${type}${min}.js`,
+      format: 'es'
+    }]
   : [{
-    file: `./dist/${name}.${type}${min}.js`,
-    format: 'es'
-  }, {
-    file: `./dist/${name}${min}.js`,
-    format: 'cjs',
-    exports: 'named'
-  }]
+      file: `./dist/${name}.${type}${min}.js`,
+      format: 'es'
+    }, {
+      file: `./dist/${name}${min}.js`,
+      format: 'cjs',
+      exports: 'named'
+    }]
 
 const builder = (input, name, type, min = '') => {
   const _babelOpts = {
     exclude: 'node_modules/**',
-    runtimeHelpers: true,
+    babelHelpers: 'bundled',
     presets: babelEnv[type].presets
   }
   const plugins = [
     babel(_babelOpts)
   ]
   if (min) {
-    plugins.push(uglify({}))
+    plugins.push(terser({}))
   }
 
   return {

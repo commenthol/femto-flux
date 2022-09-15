@@ -2,6 +2,7 @@
 const mode = 'production'
 
 module.exports = {
+  // eslint-disable-next-line n/no-path-concat
   entry: `${__dirname}/container.js`,
   output: {
     filename: 'container.bundle.js',
